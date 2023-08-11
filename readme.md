@@ -34,14 +34,14 @@ PEPesc relies on iptables's TPRORXY to intercept TCP connections, where the spec
 Run the following commands on node B as root to intercept TCP traffic from node B:
 
     sysctl -w net.ipv4.ip_forward=1
-    iptables -t mangle -A PREROUTING -p tcp --source 172.20.35.37 -j TPROXY --on-port 9999 --tproxy-mark 1
+    iptables -t mangle -A PREROUTING -p tcp --source 10.0.0.1 --destination 10.0.2.4 -j TPROXY --on-port 9999 --tproxy-mark 1
     ip rule add fwmark 1 lookup 101
     ip route add local 0.0.0.0/0 dev lo table 101
 
 Run the following commands on node C to intercept TCP traffic from node D:
 
     sysctl -w net.ipv4.ip_forward=1
-    iptables -t mangle -A PREROUTING -p tcp --source 172.20.35.38 -j TPROXY --on-port 9999 --tproxy-mark 1
+    iptables -t mangle -A PREROUTING -p tcp --source 10.0.2.4  --destination 10.0.0.1 -j TPROXY --on-port 9999 --tproxy-mark 1
     ip rule add fwmark 1 lookup 101
     ip route add local 0.0.0.0/0 dev lo table 101
 
@@ -69,11 +69,11 @@ PEPesc should be run as root. Using the above 4-node topology as an example, run
 
 Node B:
 
-    python3 pep.py --selfIp 172.20.35.91 --selfPort 9999 --peerIp 172.20.35.92 --peerPort 9999 --detail
+    python3 pep.py --selfIp 10.0.1.2 --selfPort 9999 --peerIp 10.0.1.3 --peerPort 9999 --detail
 
 Node C:
 
-    python3 pep.py --selfIp 172.20.35.92 --selfPort 9999 --peerIp 172.20.35.91 --peerPort 9999 --detail
+    python3 pep.py --selfIp 10.0.1.3 --selfPort 9999 --peerIp 10.0.1.2 --peerPort 9999 --detail
 
 ## iperf Test
 Run iperf client and server on node A and D, respectively, to test PEPesc. On node D run:
@@ -82,7 +82,7 @@ iperf -s -p 10000 -i 1
 ```
 On node A run:
 ```
-iperf -c 172.20.35.38 -p 10000 -i 1 -t 120
+iperf -c 10.0.2.4 -p 10000 -i 1 -t 10
 ```
 
 ## Paper Citation
@@ -92,3 +92,4 @@ The detailed design and experiment results have been accepted as a regular paper
 <blockquote>
 Ye Li, Liang Chen, Li Su, Kanglian Zhao, Jue Wang, Yongjie Yang, Ning Ge, "PEPesc: A TCP Performance Enhancing Proxy for Non-Terrestrial Networks", IEEE Transactions on Mobile Computing, 2023. (Early Access: https://ieeexplore.ieee.org/document/10107444)
 </blockquote>
+
