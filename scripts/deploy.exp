@@ -1,0 +1,16 @@
+#!/usr/bin/expect
+set timeout 30
+spawn sudo python scripts/create_4_nodes_topo.py
+expect "*password*"
+send "123\n"
+
+expect "*>"
+send "r1 scripts/r1.sh\n"
+
+expect "*>"
+send "r2 scripts/r2.sh\n"
+
+expect "*>"
+send "xterm h1 h2 r1 r2\n"
+
+interact
