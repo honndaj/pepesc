@@ -5,10 +5,10 @@ expect "*password*"
 send "123\n"
 
 expect "*>"
-send "r1 scripts/r1.sh\n"
+send "r1 scripts/r1_deploy.sh\n"
 
 expect "*>"
-send "r2 scripts/r2.sh\n"
+send "r2 scripts/r2_deploy.sh\n"
 
 expect "*>"
 send "xterm h1 h2 r1 r2\n"

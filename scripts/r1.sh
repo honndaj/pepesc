@@ -1,5 +1,1 @@
-#!/bin/bash
-sysctl -w net.ipv4.ip_forward=1
-iptables -t mangle -A PREROUTING -p tcp --source 10.0.0.1 --destination 10.0.2.4 -j TPROXY --on-port 9999 --tproxy-mark 1
-ip rule add fwmark 1 lookup 101
-ip route add local 0.0.0.0/0 dev lo table 101
+python3 pep.py --selfIp 10.0.1.2 --selfPort 9999 --peerIp 10.0.1.3 --peerPort 9999 --detail
